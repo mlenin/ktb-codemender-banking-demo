@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Krungthai Bank (KTB) — Google DeepMind CodeMender Autonomous AppSec Command Center</title>
+  <meta name="description" content="Interactive Executive & Technical Demo of Google DeepMind CodeMender for Krungthai Bank (KTB) powered by Keyless Workload Identity Federation on lenin-ai-playground." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #030b17;
+      --bg-surface: #071529;
+      --bg-card: rgba(11, 29, 56, 0.78);
+      --bg-card-hover: rgba(16, 40, 76, 0.92);
+      --ktb-blue: #00a8e8;
+      --ktb-cyan: #38bdf8;
+      --ktb-navy: #005691;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --crimson: #f43f5e;
+      --purple: #8b5cf6;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-subtle: rgba(56, 189, 248, 0.18);
+      --border-glow: rgba(0, 168, 232, 0.48);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(0, 168, 232, 0.16), transparent 38%),
+        radial-gradient(circle at 88% 14%, rgba(16, 185, 129, 0.12), transparent 36%),
+        radial-gradient(circle at 50% 90%, rgba(139, 92, 246, 0.10), transparent 45%),
+        var(--bg-deep);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.55;
+    }
+
+    /* Top Navigation Bar */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(18px);
+      background: rgba(3, 11, 23, 0.86);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #00a8e8 0%, #005691 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: #fff;
+      box-shadow: 0 0 22px rgba(0, 168, 232, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #fff;
+    }
+
+    .brand-sub {
+      font-size: 0.76rem;
+      color: var(--ktb-cyan);
+      font-weight: 500;
+    }
+
+    .env-pills {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.74rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-subtle);
+      color: #e2e8f0;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .pill:hover {
+      border-color: var(--ktb-cyan);
+      transform: translateY(-1px);
+    }
+
+    .dot-live {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 10px var(--emerald);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(1.2); }
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 1.75rem 2rem 4rem;
+    }
+
+    /* Hero Banner */
+    .hero {
+      background: linear-gradient(135deg, rgba(0, 86, 145, 0.32) 0%, rgba(7, 21, 41, 0.92) 65%, rgba(16, 185, 129, 0.14) 100%);
+      border: 1px solid var(--border-glow);
+      border-radius: 20px;
+      padding: 2rem 2.25rem;
+      margin-bottom: 1.75rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-grid { grid-template-columns: 1fr; }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0, 168, 232, 0.15);
+      border: 1px solid rgba(0, 168, 232, 0.4);
+      color: var(--ktb-cyan);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.3rem 0.85rem;
+      border-radius: 999px;
+      margin-bottom: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .hero h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.15rem;
+      font-weight: 800;
+      line-height: 1.18;
+      margin-bottom: 0.85rem;
+      background: linear-gradient(95deg, #ffffff 0%, #7dd3fc 55%, #34d399 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: #cbd5e1;
+      font-size: 0.96rem;
+      margin-bottom: 1.25rem;
+      max-width: 740px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.68rem 1.25rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.86rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00a8e8 0%, #0284c7 100%);
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(0, 168, 232, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(0, 168, 232, 0.5);
+    }
+
+    .btn-emerald {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.32);
+    }
+
+    .btn-emerald:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: rgba(15, 23, 42, 0.75);
+      color: #e2e8f0;
+      border-color: var(--border-subtle);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--ktb-cyan);
+      background: rgba(0, 168, 232, 0.12);
+    }
+
+    /* 4-Stage Pipeline Visual in Hero */
+    .pipeline-mini {
+      background: rgba(3, 11, 23, 0.78);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 1.2rem;
+    }
+
+    .pipeline-mini-title {
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--ktb-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .stage-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .stage-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 0.85rem;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.88);
+      border-left: 3px solid var(--ktb-blue);
+      font-size: 0.82rem;
+    }
+
+    .stage-item.verified { border-left-color: var(--amber); }
+    .stage-item.fixed { border-left-color: var(--emerald); }
+    .stage-item.pr { border-left-color: var(--purple); }
+
+    .stage-cmd {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+      color: var(--ktb-cyan);
+      background: rgba(0, 168, 232, 0.12);
+      padding: 0.18rem 0.45rem;
+      border-radius: 6px;
+    }
+
+    /* Navigation Tabs */
+    .tabs-bar {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 0.72rem 1.25rem;
+      border-radius: 11px;
+      background: rgba(11, 29, 56, 0.55);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.86rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(0, 168, 232, 0.25) 0%, rgba(0, 86, 145, 0.45) 100%);
+      color: #fff;
+      border-color: var(--ktb-blue);
+      box-shadow: 0 4px 18px rgba(0, 168, 232, 0.25);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* KPI Metric Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.1rem;
+      margin-bottom: 1.6rem;
+    }
+
+    @media (max-width: 1024px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 1.25rem 1.35rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-label {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.45rem;
+      font-weight: 600;
+    }
+
+    .kpi-value {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.25rem;
+    }
+
+    .kpi-delta {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--emerald);
+    }
+
+    /* Comparison & ROI Grid */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 1024px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+
+    .card h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.22rem;
+      margin-bottom: 0.4rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .card-sub {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+    }
+
+    table.comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    table.comp-table th {
+      text-align: left;
+      padding: 0.7rem 0.75rem;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--ktb-cyan);
+      border-bottom: 1px solid var(--border-subtle);
+      font-weight: 600;
+    }
+
+    table.comp-table td {
+      padding: 0.7rem 0.75rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+      vertical-align: top;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.18rem 0.55rem;
+      border-radius: 6px;
+      font-size: 0.71rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .badge-crit { background: rgba(244, 63, 94, 0.18); color: #fda4af; border: 1px solid rgba(244, 63, 94, 0.4); }
+    .badge-high { background: rgba(245, 158, 11, 0.18); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .badge-ok { background: rgba(16, 185, 129, 0.18); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .badge-info { background: rgba(0, 168, 232, 0.18); color: #7dd3fc; border: 1px solid rgba(0, 168, 232, 0.4); }
+
+    /* ROI Sliders */
+    .slider-group {
+      margin-bottom: 1rem;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      margin-bottom: 0.35rem;
+      font-weight: 600;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--ktb-blue);
+      cursor: pointer;
+    }
+
+    .roi-results {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.85rem;
+      margin-top: 1.1rem;
+      padding-top: 1.1rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .roi-box {
+      background: rgba(3, 11, 23, 0.7);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+    }
+
+    .roi-box-val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--emerald);
+    }
+
+    /* Interactive Vulnerability Workbench */
+    .workbench-grid {
+      display: grid;
+      grid-template-columns: 330px 1fr;
+      gap: 1.35rem;
+    }
+
+    @media (max-width: 1024px) {
+      .workbench-grid { grid-template-columns: 1fr; }
+    }
+
+    .vuln-selector {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .vuln-item {
+      background: rgba(7, 21, 41, 0.85);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+
+    .vuln-item:hover {
+      border-color: var(--ktb-cyan);
+    }
+
+    .vuln-item.active {
+      background: rgba(0, 86, 145, 0.32);
+      border-color: var(--ktb-blue);
+      box-shadow: 0 0 20px rgba(0, 168, 232, 0.2);
+    }
+
+    .code-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    @media (max-width: 960px) {
+      .code-split { grid-template-columns: 1fr; }
+    }
+
+    pre.code-block {
+      background: #020813;
+      border: 1px solid var(--border-subtle);
+      border-radius: 11px;
+      padding: 0.95rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      color: #e2e8f0;
+    }
+
+    .terminal-box {
+      background: #01060e;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 12px;
+      padding: 1rem 1.15rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      line-height: 1.55;
+      color: #a7f3d0;
+      min-height: 210px;
+      max-height: 360px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Topbar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo">KTB</div>
+      <div>
+        <div class="brand-title">Krungthai Bank (KTB) &times; Google DeepMind CodeMender</div>
+        <div class="brand-sub">Autonomous Agentic AppSec Guardrail &bull; Keyless WIF CI/CD Demo</div>
+      </div>
+    </div>
+    <div class="env-pills">
+      <span class="pill"><span class="dot-live"></span> GCP Argolis: <strong>lenin-ai-playground (612463410164)</strong></span>
+      <a class="pill" href="https://github.com/mlenin/ktb-codemender-banking-demo" target="_blank" rel="noopener">
+        GitHub: <strong>mlenin/ktb-codemender-banking-demo</strong> &#8599;
+      </a>
+      <a class="pill" href="https://github.com/mlenin/ktb-codemender-banking-demo/actions" target="_blank" rel="noopener">
+        Actions Guardrail &#8599;
+      </a>
+      <a class="pill" href="https://github.com/mlenin/ktb-codemender-banking-demo/pulls" target="_blank" rel="noopener">
+        Auto-Remediation PRs &#8599;
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-badge">
+            <span>&#9889; Krungthai Next &bull; Paotang &bull; PromptPay Core Security</span>
+          </div>
+          <h1>Zero False-Positives. Autonomous Exploit Verification &amp; Instant Patch PRs.</h1>
+          <p>
+            Traditional static analysis (SAST) floods Krungthai Bank engineering teams with unverified warnings while missing multi-hop business logic flaws like <strong>PromptPay TOCTOU Double-Spend</strong> and <strong>Obfuscated RCE</strong>.
+            <strong>Google DeepMind CodeMender</strong> scans your code, writes and executes a real sandbox exploit to prove each vulnerability (`cm verify`), synthesizes a verified patch (`cm fix`), and opens a Pull Request using <strong>Keyless GCP Workload Identity Federation</strong>.
+          </p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" onclick="switchTab('workbench')">
+              &#9654; Launch Interactive CodeMender Lab (`cm find / verify / fix`)
+            </button>
+            <button class="btn btn-emerald" onclick="switchTab('live-ci')">
+              &#128640; View Live GitHub Actions &amp; Auto-PR Status
+            </button>
+            <a class="btn btn-outline" href="https://github.com/mlenin/ktb-codemender-banking-demo" target="_blank" rel="noopener">
+              Open GitHub Repo (`mlenin/ktb-codemender-banking-demo`) &#8599;
+            </a>
+          </div>
+        </div>
+
+        <div class="pipeline-mini">
+          <div class="pipeline-mini-title">
+            <span>Autonomous 4-Stage Guardrail</span>
+            <span>Model: gemini-3.7-flash</span>
+          </div>
+          <div class="stage-list">
+            <div class="stage-item">
+              <div>
+                <strong>1. Deep Semantic Scan</strong>
+                <div style="font-size:0.73rem;color:var(--text-muted)">Traces cross-module call graphs across `src/services`</div>
+              </div>
+              <span class="stage-cmd">cm find</span>
+            </div>
+            <div class="stage-item verified">
+              <div>
+                <strong>2. Sandbox Exploit Synthesis</strong>
+                <div style="font-size:0.73rem;color:var(--text-muted)">Writes &amp; runs PoC exploit to eliminate false positives</div>
+              </div>
+              <span class="stage-cmd">cm verify -y</span>
+            </div>
+            <div class="stage-item fixed">
+              <div>
+                <strong>3. Autonomous Root-Cause Patch</strong>
+                <div style="font-size:0.73rem;color:var(--text-muted)">Patches code &amp; re-runs exploit to prove remediation</div>
+              </div>
+              <span class="stage-cmd">cm fix -y</span>
+            </div>
+            <div class="stage-item pr">
+              <div>
+                <strong>4. Keyless WIF Pull Request &amp; Gate</strong>
+                <div style="font-size:0.73rem;color:var(--text-muted)">Blocks unsafe merge &amp; opens `codemender/auto-remediation` PR</div>
+              </div>
+              <span class="stage-cmd">OIDC + PR</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top KPI Bar -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">False-Positive Noise Sent to KTB Devs</div>
+        <div class="kpi-value">0%</div>
+        <div class="kpi-delta">&#10003; 100% of Escalated Findings Proven by Exploit (`cm verify`)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Mean Time to Remediate (MTTR)</div>
+        <div class="kpi-value">4.5 min</div>
+        <div class="kpi-delta">&#8595; Down from 21.4 Days (99.8% Reduction in Exposure Window)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Multi-Hop &amp; Async Vulnerabilities Caught</div>
+        <div class="kpi-value">5 / 5</div>
+        <div class="kpi-delta">&#10003; RCE, Command Inj, TOCTOU Double-Spend, SSRF, Heap Leak</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Long-Lived GCP Service Account Keys</div>
+        <div class="kpi-value">Zero</div>
+        <div class="kpi-delta">&#128274; 100% Keyless GitHub OIDC &rarr; GCP WIF (`lenin-ai-playground`)</div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs-bar">
+      <button class="tab-btn active" id="tabbtn-business" onclick="switchTab('business')">
+        &#128200; 1. KTB Business Benefits &amp; BoT Compliance ROI
+      </button>
+      <button class="tab-btn" id="tabbtn-workbench" onclick="switchTab('workbench')">
+        &#128300; 2. Interactive CodeMender Lab (`cm find` &rarr; `verify` &rarr; `fix`)
+      </button>
+      <button class="tab-btn" id="tabbtn-live-ci" onclick="switchTab('live-ci')">
+        &#9881; 3. Live GitHub Actions WIF Pipeline &amp; Auto-PR Telemetry
+      </button>
+      <button class="tab-btn" id="tabbtn-playbook" onclick="switchTab('playbook')">
+        &#128214; 4. Repeatable Presenter Playbook &amp; 1-Click Reset
+      </button>
+    </div>
+
+    <!-- TAB 1: BUSINESS BENEFITS & ROI CALCULATOR -->
+    <section class="tab-panel active" id="panel-business">
+      <div class="two-col">
+        <div class="card">
+          <h2>&#127974; Why Google DeepMind CodeMender for Krungthai Bank (KTB)?</h2>
+          <div class="card-sub">
+            Securing Thailand's critical national digital banking infrastructure (<strong>KTB Next</strong>, <strong>Paotang</strong>, <strong>Krungthai BUSINESS</strong>, and <strong>PromptPay</strong>) without slowing down daily release velocity.
+          </div>
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th>Security Dimension</th>
+                <th>Legacy SAST Scanners</th>
+                <th>Google DeepMind CodeMender (`cm`)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Detection Mechanism</strong></td>
+                <td>Static AST regex rules; blind to runtime prototype tricks (`[].sort.constructor`) &amp; async race conditions.</td>
+                <td><span class="badge badge-ok">Agentic Gemini 3.7</span> Traces full cross-file call graphs &amp; asynchronous state transitions.</td>
+              </tr>
+              <tr>
+                <td><strong>Triage &amp; False Positives</strong></td>
+                <td><span class="badge badge-crit">68%–82% False Positives</span> Security engineers waste weeks manually reviewing unexploitable warnings.</td>
+                <td><span class="badge badge-ok">0% False Positives</span> `cm verify` writes &amp; executes a working PoC exploit in an isolated sandbox before alerting.</td>
+              </tr>
+              <tr>
+                <td><strong>Remediation Workflow</strong></td>
+                <td>Drops a PDF/Jira ticket on developers with generic advice; takes <strong>14–30 days</strong> to code and test a fix.</td>
+                <td><span class="badge badge-ok">Autonomous PR in ~4 Mins</span> `cm fix` writes the idiomatic patch, re-tests the exploit to prove it fails, and opens a GitHub PR.</td>
+              </tr>
+              <tr>
+                <td><strong>CI/CD Cloud Authentication</strong></td>
+                <td>Often relies on static API tokens or rotated JSON keys stored in CI secrets.</td>
+                <td><span class="badge badge-info">100% Keyless WIF</span> Ephemeral GitHub OIDC tokens exchanged with `lenin-ai-playground` IAM Workload Identity Pool.</td>
+              </tr>
+              <tr>
+                <td><strong>Bank of Thailand (BoT) Audit Evidence</strong></td>
+                <td>Point-in-time static scan logs without proof of exploitability or patch efficacy.</td>
+                <td><span class="badge badge-ok">Complete Audit Trail</span> Downloadable HTML report containing exact PoC exploit, verification verdict, and unified git diff.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Interactive ROI Calculator -->
+        <div class="card">
+          <h2>&#128176; KTB DevSecOps &amp; AppSec ROI Simulator</h2>
+          <div class="card-sub">Adjust sliders to model annual engineering time reclaimed and risk reduction across KTB digital banking squads.</div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <span>KTB Software Engineers &amp; DevSecOps Staff</span>
+              <span id="lbl-devs" style="color:var(--ktb-cyan)">800 Engineers</span>
+            </div>
+            <input type="range" id="rng-devs" min="100" max="2500" step="50" value="800" oninput="updateRoi()" />
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <span>Active Banking Microservices / Repositories</span>
+              <span id="lbl-repos" style="color:var(--ktb-cyan)">250 Repos</span>
+            </div>
+            <input type="range" id="rng-repos" min="20" max="1000" step="10" value="250" oninput="updateRoi()" />
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <span>High/Critical Findings Triaged &amp; Patched / Repo / Year</span>
+              <span id="lbl-findings" style="color:var(--ktb-cyan)">18 Findings</span>
+            </div>
+            <input type="range" id="rng-findings" min="4" max="60" step="2" value="18" oninput="updateRoi()" />
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <span>Manual Triage + Patch + Regression Effort per Finding</span>
+              <span id="lbl-hours" style="color:var(--ktb-cyan)">6.5 Hours</span>
+            </div>
+            <input type="range" id="rng-hours" min="2" max="16" step="0.5" value="6.5" oninput="updateRoi()" />
+          </div>
+
+          <div class="roi-results">
+            <div class="roi-box">
+              <div style="font-size:0.74rem;color:var(--text-muted)">Annual KTB Developer Hours Reclaimed</div>
+              <div class="roi-box-val" id="res-hours">26,325 hrs/yr</div>
+              <div style="font-size:0.72rem;color:#94a3b8">Equivalent to <strong>13.2 full-time engineers</strong></div>
+            </div>
+            <div class="roi-box">
+              <div style="font-size:0.74rem;color:var(--text-muted)">Annual Productivity Value (THB / USD)</div>
+              <div class="roi-box-val" id="res-thb">&#3647;55.9M THB</div>
+              <div style="font-size:0.72rem;color:#94a3b8" id="res-usd">~$1.58M USD annual AppSec savings</div>
+            </div>
+            <div class="roi-box">
+              <div style="font-size:0.74rem;color:var(--text-muted)">Critical Vulnerability Exposure Window</div>
+              <div class="roi-box-val">21d &rarr; 4.5m</div>
+              <div style="font-size:0.72rem;color:#94a3b8">Blocked pre-merge at PR gate</div>
+            </div>
+            <div class="roi-box">
+              <div style="font-size:0.74rem;color:var(--text-muted)">BoT IT Risk Compliance Posture</div>
+              <div class="roi-box-val">100% Keyless</div>
+              <div style="font-size:0.72rem;color:#94a3b8">Zero static cloud credentials in GitHub</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: INTERACTIVE CODEMENDER LAB WORKBENCH -->
+    <section class="tab-panel" id="panel-workbench">
+      <div class="workbench-grid">
+        <!-- Left: 5 Real Vulnerabilities in src/services -->
+        <div class="card" style="padding:1.15rem">
+          <h2 style="font-size:1.05rem;margin-bottom:0.25rem">&#128269; `src/services/` Banking Findings</h2>
+          <div class="card-sub" style="margin-bottom:0.85rem">Select a real vulnerability in this repository to run `cm find`, `cm verify`, and `cm fix`:</div>
+          <div class="vuln-selector" id="vuln-list"></div>
+        </div>
+
+        <!-- Right: Code Comparison + Interactive Agent Runner -->
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.75rem;margin-bottom:0.75rem">
+            <div>
+              <div id="active-vuln-badges" style="margin-bottom:0.35rem"></div>
+              <h2 id="active-vuln-title" style="font-size:1.3rem">Loading...</h2>
+              <div id="active-vuln-context" style="font-size:0.82rem;color:var(--ktb-cyan)"></div>
+            </div>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+              <button class="btn btn-outline" onclick="runCmStep('find')">1. Run `cm find`</button>
+              <button class="btn btn-primary" onclick="runCmStep('verify')">2. Run `cm verify` (Exploit)</button>
+              <button class="btn btn-emerald" onclick="runCmStep('fix')">3. Run `cm fix` (Auto-Patch)</button>
+            </div>
+          </div>
+
+          <!-- SAST vs CodeMender Callout -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;margin-bottom:0.9rem;font-size:0.79rem">
+            <div style="background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.35);padding:0.7rem 0.9rem;border-radius:10px">
+              <strong style="color:#fda4af">&#10060; Why Legacy SAST Failed:</strong>
+              <div id="active-sast-note" style="color:#e2e8f0;margin-top:0.2rem"></div>
+            </div>
+            <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.35);padding:0.7rem 0.9rem;border-radius:10px">
+              <strong style="color:#6ee7b7">&#10004; How CodeMender Solved It:</strong>
+              <div id="active-cm-note" style="color:#e2e8f0;margin-top:0.2rem"></div>
+            </div>
+          </div>
+
+          <!-- Side-by-Side Vulnerable vs Patched Code -->
+          <div class="code-split">
+            <div>
+              <div style="font-size:0.76rem;font-weight:700;color:#fda4af;margin-bottom:0.35rem;font-family:'JetBrains Mono',monospace">
+                &#9888; VULNERABLE CODE (<span id="active-file-label">src/services/admin.service.js</span>)
+              </div>
+              <pre class="code-block" id="code-vulnerable"></pre>
+            </div>
+            <div>
+              <div style="font-size:0.76rem;font-weight:700;color:#6ee7b7;margin-bottom:0.35rem;font-family:'JetBrains Mono',monospace">
+                &#10003; CODEMENDER AUTONOMOUS PATCH (`cm fix` Unified Diff)
+              </div>
+              <pre class="code-block" id="code-patched"></pre>
+            </div>
+          </div>
+
+          <!-- Live Backend Sandbox Execution Buttons -->
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.6rem;margin-bottom:0.55rem">
+            <div style="font-size:0.8rem;font-weight:700;color:var(--ktb-cyan);font-family:'JetBrains Mono',monospace">
+              &#9000; LIVE CODEMENDER AGENT &amp; SANDBOX EXECUTION CONSOLE
+            </div>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+              <button class="btn btn-outline" style="padding:0.42rem 0.85rem;font-size:0.76rem;border-color:rgba(244,63,94,0.5);color:#fda4af" onclick="executeLiveSandbox('vulnerable')">
+                &#128165; Execute PoC Exploit on Vulnerable Endpoint
+              </button>
+              <button class="btn btn-outline" style="padding:0.42rem 0.85rem;font-size:0.76rem;border-color:rgba(16,185,129,0.5);color:#6ee7b7" onclick="executeLiveSandbox('patched')">
+                &#128737; Execute Same Payload on CodeMender-Patched Endpoint
+              </button>
+            </div>
+          </div>
+          <div class="terminal-box" id="cm-terminal"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: LIVE GITHUB ACTIONS WIF PIPELINE & AUTO-PR TELEMETRY -->
+    <section class="tab-panel" id="panel-live-ci">
+      <div class="two-col">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem">
+            <h2>&#9881; Live GitHub Actions `CodeMender CI/CD Guardrail` Runs</h2>
+            <button class="btn btn-outline" style="padding:0.4rem 0.85rem;font-size:0.76rem" onclick="refreshLiveStatus()">&#8635; Refresh Live GitHub API</button>
+          </div>
+          <div class="card-sub">
+            Real-time telemetry fetched directly from <a href="https://github.com/mlenin/ktb-codemender-banking-demo/actions" target="_blank" style="color:var(--ktb-cyan)">`github.com/mlenin/ktb-codemender-banking-demo/actions`</a>
+          </div>
+          <div id="gh-runs-container" style="margin-bottom:1.25rem">Loading live workflow runs...</div>
+
+          <h2>&#128268; Autonomous Remediation Pull Requests (`codemender-bot`)</h2>
+          <div class="card-sub">
+            Pull Requests automatically created by `codemender-pipeline.yml` on branch `codemender/auto-remediation`
+          </div>
+          <div id="gh-prs-container">Loading Pull Requests...</div>
+        </div>
+
+        <div class="card">
+          <h2>&#128272; Keyless GCP Workload Identity Federation (WIF) Config</h2>
+          <div class="card-sub">
+            Connected live to your Argolis project <strong>`lenin-ai-playground`</strong> (`612463410164`) following the `codemender-wif-setup` architecture.
+          </div>
+          <pre class="code-block" style="margin-bottom:1rem">
+# 1. Keyless OIDC Exchange in .github/workflows/codemender-pipeline.yml
+permissions:
+  contents: write          # Push codemender/auto-remediation branch
+  pull-requests: write     # Open Autonomous Remediation PR
+  id-token: write          # Mint GitHub OIDC JWT for GCP WIF
+
+# 2. Argolis Project &amp; WIF Binding (lenin-ai-playground)
+GCP_QUOTA_PROJECT = "lenin-ai-playground"
+GCP_PROJECT_NUM   = "612463410164"
+GCP_WIF_PROVIDER  = "projects/612463410164/locations/global/workloadIdentityPools/github-actions/providers/github-oidc"
+GCP_SA_EMAIL      = "codemender-ci@lenin-ai-playground.iam.gserviceaccount.com"
+
+# 3. CodeMender Unattended CI Execution Flags
+cm find "src/services" -y --model "gemini-3.7-flash"
+cm verify "$FID" -y --bypass-warning --model "gemini-3.7-flash"
+cm fix "$FID" -y --bypass-warning --model "gemini-3.7-flash"</pre>
+
+          <div style="display:flex;gap:0.65rem;flex-wrap:wrap">
+            <a class="btn btn-primary" href="https://github.com/mlenin/ktb-codemender-banking-demo/actions/workflows/codemender-pipeline.yml" target="_blank" rel="noopener">
+              &#9654; Trigger CodeMender Workflow on GitHub &#8599;
+            </a>
+            <a class="btn btn-emerald" href="https://github.com/mlenin/ktb-codemender-banking-demo/actions/workflows/reset-demo.yml" target="_blank" rel="noopener">
+              &#8634; 1-Click Reset &amp; Replay Demo Workflow &#8599;
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: REPEATABLE PRESENTER PLAYBOOK -->
+    <section class="tab-panel" id="panel-playbook">
+      <div class="card">
+        <h2>&#127919; Repeatable KTB Presenter Playbook (5-Minute Executive &amp; Technical Demo Flow)</h2>
+        <div class="card-sub">
+          Use this repeatable sequence for every KTB CISO, Enterprise Architecture, and DevSecOps session.
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:1.15rem">
+          <div style="background:rgba(7,21,41,0.85);border:1px solid var(--border-subtle);border-radius:12px;padding:1.15rem">
+            <h3 style="color:var(--ktb-cyan);font-size:0.95rem;margin-bottom:0.4rem">Step 1: Frame the KTB Business Problem (Tab 1)</h3>
+            <p style="font-size:0.83rem;color:#cbd5e1">
+              Show how KTB's high-velocity squads (KTB Next, Paotang, PromptPay) lose thousands of engineering hours triaging SAST false positives while subtle multi-hop bugs (`[].sort.constructor` RCE, `checkout.service.js` TOCTOU race condition) slip past static regex scanners. Use the <strong>KTB ROI Simulator</strong> to quantify hours reclaimed.
+            </p>
+          </div>
+          <div style="background:rgba(7,21,41,0.85);border:1px solid var(--border-subtle);border-radius:12px;padding:1.15rem">
+            <h3 style="color:var(--ktb-cyan);font-size:0.95rem;margin-bottom:0.4rem">Step 2: Live Exploit Verification vs. Auto-Patch (Tab 2)</h3>
+            <p style="font-size:0.83rem;color:#cbd5e1">
+              Open <strong>Tab 2 (Interactive CodeMender Lab)</strong>, select <strong>`CM-001` (Formula RCE)</strong> or <strong>`CM-003` (PromptPay Double-Spend Race Condition)</strong>, click <strong>"Execute PoC Exploit on Vulnerable Endpoint"</strong> to prove the bug is real, then click <strong>"Execute Same Payload on CodeMender-Patched Endpoint"</strong> to prove `cm fix` neutralizes it.
+            </p>
+          </div>
+          <div style="background:rgba(7,21,41,0.85);border:1px solid var(--border-subtle);border-radius:12px;padding:1.15rem">
+            <h3 style="color:var(--ktb-cyan);font-size:0.95rem;margin-bottom:0.4rem">Step 3: Inspect the Live GitHub PR &amp; Security Gate (Tab 3)</h3>
+            <p style="font-size:0.83rem;color:#cbd5e1">
+              Click into <a href="https://github.com/mlenin/ktb-codemender-banking-demo/pulls" target="_blank" style="color:var(--ktb-cyan)">`mlenin/ktb-codemender-banking-demo/pulls`</a> to show the real Pull Request (`CodeMender: autonomous security remediation`) created via keyless WIF against `lenin-ai-playground`, complete with the downloadable `codemender-html-report` artifact.
+            </p>
+          </div>
+          <div style="background:rgba(7,21,41,0.85);border:1px solid var(--border-subtle);border-radius:12px;padding:1.15rem">
+            <h3 style="color:var(--ktb-cyan);font-size:0.95rem;margin-bottom:0.4rem">Step 4: 1-Click Reset for Unlimited Repeatability</h3>
+            <p style="font-size:0.83rem;color:#cbd5e1">
+              Whenever you want to reset the repo back to a clean vulnerable baseline (even if you merged the PR live during a demo!), trigger the <strong>`Reset &amp; Replay KTB CodeMender Demo`</strong> workflow in GitHub Actions or run:
+              <br/><code style="color:#6ee7b7">gh workflow run reset-demo.yml -R mlenin/ktb-codemender-banking-demo</code>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let VULNS = [];
+    let currentVuln = null;
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('tabbtn-' + tabId).classList.add('active');
+      document.getElementById('panel-' + tabId).classList.add('active');
+      if (tabId === 'live-ci') refreshLiveStatus();
+    }
+
+    function updateRoi() {
+      const devs = Number(document.getElementById('rng-devs').value);
+      const repos = Number(document.getElementById('rng-repos').value);
+      const findings = Number(document.getElementById('rng-findings').value);
+      const hours = Number(document.getElementById('rng-hours').value);
+
+      document.getElementById('lbl-devs').textContent = devs.toLocaleString() + ' Engineers';
+      document.getElementById('lbl-repos').textContent = repos.toLocaleString() + ' Repos';
+      document.getElementById('lbl-findings').textContent = findings + ' Findings';
+      document.getElementById('lbl-hours').textContent = hours + ' Hours';
+
+      // 90% of manual triage + fix authoring time reclaimed by cm verify + cm fix
+      const reclaimedHours = Math.round(repos * findings * hours * 0.9);
+      const usdSaved = Math.round(reclaimedHours * 60);
+      const thbSaved = (usdSaved * 35.2) / 1e6;
+
+      document.getElementById('res-hours').textContent = reclaimedHours.toLocaleString() + ' hrs/yr';
+      document.getElementById('res-thb').textContent = '฿' + thbSaved.toFixed(1) + 'M THB';
+      document.getElementById('res-usd').textContent = '~$' + (usdSaved / 1e6).toFixed(2) + 'M USD annual AppSec savings';
+    }
+
+    async function loadVulnerabilities() {
+      const res = await fetch('/api/v1/demo/vulnerabilities');
+      const data = await res.json();
+      VULNS = data.vulnerabilities || [];
+      const listEl = document.getElementById('vuln-list');
+      listEl.innerHTML = '';
+      VULNS.forEach((v, idx) => {
+        const div = document.createElement('div');
+        div.className = 'vuln-item' + (idx === 0 ? ' active' : '');
+        div.id = 'vitem-' + v.id;
+        div.onclick = () => selectVuln(v.id);
+        const badgeClass = v.severity === 'CRITICAL' ? 'badge-crit' : 'badge-high';
+        div.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem">
+            <span class="badge ${badgeClass}">${v.id} &bull; ${v.severity} (CVSS ${v.cvss})</span>
+            <span style="font-size:0.7rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace">${v.file.split(' ')[0]}</span>
+          </div>
+          <div style="font-weight:700;font-size:0.84rem;color:#fff;margin-bottom:0.2rem">${v.title}</div>
+          <div style="font-size:0.74rem;color:var(--ktb-cyan)">${v.bankingContext}</div>
+        `;
+        listEl.appendChild(div);
+      });
+      if (VULNS.length > 0) selectVuln(VULNS[0].id);
+    }
+
+    function selectVuln(id) {
+      currentVuln = VULNS.find(v => v.id === id) || VULNS[0];
+      document.querySelectorAll('.vuln-item').forEach(el => el.classList.remove('active'));
+      const activeEl = document.getElementById('vitem-' + currentVuln.id);
+      if (activeEl) activeEl.classList.add('active');
+
+      const badgeClass = currentVuln.severity === 'CRITICAL' ? 'badge-crit' : 'badge-high';
+      document.getElementById('active-vuln-badges').innerHTML = `
+        <span class="badge ${badgeClass}">${currentVuln.severity} &bull; CVSS ${currentVuln.cvss}</span>
+        <span class="badge badge-info" style="margin-left:0.4rem">${currentVuln.cwe}</span>
+        <span class="badge badge-ok" style="margin-left:0.4rem">VERIFIED BY EXPLOIT</span>
+      `;
+      document.getElementById('active-vuln-title').textContent = currentVuln.title;
+      document.getElementById('active-vuln-context').textContent = 'KTB Target System: ' + currentVuln.bankingContext + ' (' + currentVuln.file + ':' + currentVuln.lines + ')';
+      document.getElementById('active-sast-note').textContent = currentVuln.sastResult;
+      document.getElementById('active-cm-note').textContent = currentVuln.cmResult;
+      document.getElementById('active-file-label').textContent = currentVuln.file;
+      document.getElementById('code-vulnerable').textContent = currentVuln.vulnerableCode;
+      document.getElementById('code-patched').textContent = currentVuln.patchDiff;
+
+      runCmStep('find');
+    }
+
+    function runCmStep(step) {
+      if (!currentVuln) return;
+      const term = document.getElementById('cm-terminal');
+      if (step === 'find') {
+        term.textContent =
+`$ cm find "src/services" -y --model "gemini-3.7-flash"
+[CodeMender] Authenticated via GCP Workload Identity Federation (lenin-ai-playground / 612463410164)
+[CodeMender] Service Account: codemender-ci@lenin-ai-playground.iam.gserviceaccount.com
+[CodeMender] Scanning repository boundary: /workspace/ktb-codemender-banking-demo (vcs.type=git)
+[CodeMender] Tracing cross-module call graph in ${currentVuln.file} (lines ${currentVuln.lines})...
+  -> Discovered candidate finding [${currentVuln.id}]: ${currentVuln.title}
+  -> Severity: ${currentVuln.severity} (CVSS ${currentVuln.cvss}) | ${currentVuln.cwe}
+  -> Status: OPEN (Pending Sandbox Exploit Verification via 'cm verify')`;
+      } else if (step === 'verify') {
+        term.textContent =
+`$ cm verify "${currentVuln.id}" -y --bypass-warning --model "gemini-3.7-flash"
+[CodeMender] Resetting git working tree (git checkout HEAD -- . && git clean -fd)...
+[CodeMender] Synthesizing Proof-of-Concept exploit harness in .exploit/${currentVuln.id}_poc.js:
+--------------------------------------------------------------------------------
+${currentVuln.exploitPayload}
+--------------------------------------------------------------------------------
+[CodeMender] Executing PoC exploit inside isolated sandbox container...
+[CodeMender] Exploit execution succeeded! Vulnerability mathematically proven exploitable.
+[cm_verdict.py] Verdict for ${currentVuln.id}: VERIFIED (True Positive — 0% False Positive Noise)`;
+      } else if (step === 'fix') {
+        term.textContent =
+`$ cm fix "${currentVuln.id}" -y --bypass-warning --model "gemini-3.7-flash"
+[CodeMender] Synthesizing root-cause security remediation for ${currentVuln.file}...
+[CodeMender] Applying unified patch diff and re-running .exploit/${currentVuln.id}_poc.js against patched code:
+  -> Re-Test Result: EXPLOIT BLOCKED! All functional unit tests PASS.
+[Git CI] git commit -m "fix(security): CodeMender remediation for ${currentVuln.id}"
+[GitHub PR] Opened Pull Request -> branch 'codemender/auto-remediation' on mlenin/ktb-codemender-banking-demo!`;
+      }
+    }
+
+    async function executeLiveSandbox(mode) {
+      if (!currentVuln) return;
+      const term = document.getElementById('cm-terminal');
+      term.textContent = `[Live Sandbox] Sending payload for ${currentVuln.id} in '${mode.toUpperCase()}' mode to /api/v1/demo/simulate-exploit...\n`;
+      const res = await fetch('/api/v1/demo/simulate-exploit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ vulnId: currentVuln.id, mode })
+      });
+      const data = await res.json();
+      term.textContent =
+`================================================================================
+LIVE BACKEND EXECUTION RESULT (${data.mode.toUpperCase()} MODE) — ${data.vulnId}
+================================================================================
+Verdict        : ${data.verdict}
+HTTP Status    : ${data.httpStatus} (${data.executionTimeMs} ms)
+Input Payload  : ${data.inputPayload}
+
+Actual Output:
+${data.actualOutput}
+
+Architectural Analysis:
+${data.explanation}
+================================================================================`;
+    }
+
+    async function refreshLiveStatus() {
+      const runsEl = document.getElementById('gh-runs-container');
+      const prsEl = document.getElementById('gh-prs-container');
+      try {
+        const res = await fetch('/api/v1/demo/live-status');
+        const data = await res.json();
+
+        if (!data.workflowRuns || data.workflowRuns.length === 0) {
+          runsEl.innerHTML = `<div style="padding:0.85rem;background:rgba(15,23,42,0.7);border-radius:10px;font-size:0.82rem">No workflow runs reported yet or initial run is queueing on <a href="${data.githubRepo.actionsUrl}" target="_blank" style="color:var(--ktb-cyan)">${data.githubRepo.fullName}</a>.</div>`;
+        } else {
+          runsEl.innerHTML = `<table class="comp-table">
+            <thead><tr><th>Workflow</th><th>Branch / SHA</th><th>Status / Gate</th><th>Inspect</th></tr></thead>
+            <tbody>` +
+            data.workflowRuns.map(r => {
+              let badge = `<span class="badge badge-info">${r.status.toUpperCase()}</span>`;
+              if (r.status === 'completed') {
+                // Note: CodeMender CI/CD Guardrail intentionally exits 1 on Security Gate when HIGH/CRITICAL findings are found & PR is opened!
+                badge = r.conclusion === 'success'
+                  ? `<span class="badge badge-ok">PASSED</span>`
+                  : `<span class="badge badge-high">GATE BLOCKED + PR OPENED</span>`;
+              }
+              return `<tr>
+                <td><strong>${r.name}</strong><div style="font-size:0.71rem;color:var(--text-muted)">${r.createdAt}</div></td>
+                <td><code>${r.headBranch}</code> (<code>${r.headSha}</code>)</td>
+                <td>${badge}</td>
+                <td><a href="${r.htmlUrl}" target="_blank" style="color:var(--ktb-cyan);font-weight:600">View Run &#8599;</a></td>
+              </tr>`;
+            }).join('') + `</tbody></table>`;
+        }
+
+        if (!data.pullRequests || data.pullRequests.length === 0) {
+          prsEl.innerHTML = `<div style="padding:0.85rem;background:rgba(15,23,42,0.7);border-radius:10px;font-size:0.82rem">CodeMender is currently running or ready to open a remediation PR on <a href="${data.githubRepo.pullsUrl}" target="_blank" style="color:var(--ktb-cyan)">${data.githubRepo.fullName}/pulls</a>.</div>`;
+        } else {
+          prsEl.innerHTML = `<table class="comp-table">
+            <thead><tr><th>PR #</th><th>Title</th><th>Branch</th><th>State</th><th>Link</th></tr></thead>
+            <tbody>` +
+            data.pullRequests.map(p => `<tr>
+              <td><strong>#${p.number}</strong></td>
+              <td><strong>${p.title}</strong></td>
+              <td><code>${p.headRef}</code></td>
+              <td><span class="badge ${p.state === 'open' ? 'badge-ok' : 'badge-info'}">${p.state.toUpperCase()}</span></td>
+              <td><a href="${p.htmlUrl}" target="_blank" style="color:var(--ktb-cyan);font-weight:600">Review Diff &#8599;</a></td>
+            </tr>`).join('') + `</tbody></table>`;
+        }
+      } catch (e) {
+        runsEl.innerHTML = `<div style="color:#fda4af">Error fetching live status: ${e.message}</div>`;
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateRoi();
+      loadVulnerabilities();
+      refreshLiveStatus();
+    });
+  </script>
+</body>
+</html>

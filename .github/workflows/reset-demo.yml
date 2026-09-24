@@ -1,0 +1,64 @@
+name: Reset & Replay KTB CodeMender Demo
+
+on:
+  workflow_dispatch:
+    inputs:
+      trigger_codemender_scan:
+        description: 'Immediately trigger CodeMender CI/CD Guardrail after resetting baseline?'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  reset-demo-state:
+    name: Restore Vulnerable Baseline & Clean Remediation PRs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Close open CodeMender PRs & remove remediation branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          OPEN_PRS=$(gh pr list --head "codemender/auto-remediation" --state open --json number --jq '.[].number' || true)
+          for PR_NUM in $OPEN_PRS; do
+            echo "Closing existing remediation PR #$PR_NUM..."
+            gh pr close "$PR_NUM" --comment "Resetting KTB CodeMender Demo environment for a fresh live run." --delete-branch || true
+          done
+          git push origin --delete codemender/auto-remediation 2>/dev/null || true
+
+      - name: Restore golden vulnerable src/services baseline
+        run: |
+          set -euo pipefail
+          git config user.name "ktb-demo-reset-bot"
+          git config user.email "ktb-demo-reset-bot@users.noreply.github.com"
+          cp lab/baseline-services/*.js src/services/
+          if ! git diff --quiet; then
+            git add src/services/
+            git commit -m "chore(demo): restore KTB vulnerable banking baseline for repeatable CodeMender demo"
+            git push origin main
+            echo "Restored vulnerable baseline and pushed to main."
+          else
+            echo "src/services/ is already at the vulnerable baseline."
+          fi
+
+      - name: Trigger CodeMender CI/CD Guardrail Workflow
+        if: ${{ inputs.trigger_codemender_scan == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run "CodeMender CI/CD Guardrail" --ref main || true
+          echo "Triggered fresh CodeMender CI/CD Guardrail run!"
