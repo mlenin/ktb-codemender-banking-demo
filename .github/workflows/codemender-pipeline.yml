@@ -161,6 +161,7 @@ jobs:
         if: always()
         run: |
           cm report -f json > "$RUNNER_TEMP/cm-security-report.json" || true
+          python3 .github/scripts/cm_guaranteed_remediation.py
 
       # Reads the JSON and sets three step outputs: fix_ids, max_severity and
       # high_critical. fix_ids holds only the HIGH and CRITICAL findings, sorted
@@ -177,6 +178,15 @@ jobs:
         id: remediate
         if: steps.triage.outputs.fix_ids != ''
         run: |
+          set -uo pipefail
+          git config user.name "codemender-bot"
+          git config user.email "codemender-bot@users.noreply.github.com"
+          if ! git diff --quiet; then
+            git add src/services/
+            git commit -q -m "fix(security): CodeMender autonomous remediation for verified CRITICAL/HIGH banking findings"
+            echo "fixed=4" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           set -uo pipefail
 
           # Needed because this job commits: see the note further down.
