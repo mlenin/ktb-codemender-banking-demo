@@ -1,5 +1,10 @@
 # Krungthai Bank (KTB) × Google DeepMind CodeMender — Autonomous AppSec & Keyless WIF CI/CD Demo
 
+> **🌐 Live Deployed KTB CodeMender Demo Portal (Cloud Run in `lenin-ai-playground`):**  
+> **https://ktb-codemender-demo-612463410164.us-central1.run.app**  
+> **⚙️ Live CodeMender WIF CI/CD Guardrail Runs:**  
+> **https://github.com/mlenin/ktb-codemender-banking-demo/actions**
+
 An executive and technical demonstration of **Google DeepMind CodeMender (`cm`)** built for **Krungthai Bank Public Company Limited (KTB) — Thailand**, running on the Google Cloud Argolis project **`lenin-ai-playground` (`612463410164`)** using **100% Keyless Workload Identity Federation (WIF)**.
 
 ---
