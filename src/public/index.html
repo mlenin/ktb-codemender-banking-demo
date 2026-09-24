@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
   <style>
     :root {
       --bg-deep: #030b17;
@@ -638,6 +639,52 @@ python3 .github/scripts/cm_verdict.py "$RUNNER_TEMP/verified-$FID.json" "$FID"
 # -> Proceeds to 'cm fix' ONLY if verdict == VERIFIED (Mathematically proven exploitable!)</pre>
         </div>
       </div>
+
+      <!-- LUCIDCHART / MERMAID ARCHITECTURE & SEQUENCE BLUEPRINT STUDIO -->
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.85rem;margin-bottom:0.75rem">
+          <div>
+            <h2 style="margin-bottom:0.2rem">&#128506; Lucid / Mermaid Enterprise Architecture &amp; End-to-End Flow Blueprints</h2>
+            <div class="card-sub" style="margin-bottom:0">
+              Interactive vector architecture blueprints showing trust boundaries, Keyless GCP Workload Identity Federation, and where <strong>CodeMender</strong> replaces manual SAST triage. Exportable directly to <strong>Lucidchart</strong>, <strong>GitHub Markdown</strong>, or <strong>Google Slides</strong>.
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.45rem;flex-wrap:wrap">
+            <button class="btn btn-outline" style="padding:0.42rem 0.75rem;font-size:0.75rem" onclick="zoomMermaid(0.15)">&#10133; Zoom In</button>
+            <button class="btn btn-outline" style="padding:0.42rem 0.75rem;font-size:0.75rem" onclick="zoomMermaid(-0.15)">&#10134; Zoom Out</button>
+            <button class="btn btn-outline" style="padding:0.42rem 0.75rem;font-size:0.75rem" onclick="zoomMermaid(0)">&#8634; Reset</button>
+            <button class="btn btn-emerald" style="padding:0.42rem 0.85rem;font-size:0.75rem" id="copy-mermaid-btn" onclick="copyCurrentMermaid()">&#128203; Copy Mermaid Code (Lucid / Docs)</button>
+          </div>
+        </div>
+
+        <!-- Blueprint Selector Sub-Tabs -->
+        <div style="display:flex;gap:0.55rem;flex-wrap:wrap;margin-bottom:1rem">
+          <button class="tab-btn active" id="mbtn-e2e" style="padding:0.55rem 1rem;font-size:0.8rem" onclick="switchMermaidDiagram('e2e')">
+            1&#65039;&#8419; Overall Enterprise Architecture &amp; Trust Boundaries (Lucid Blueprint)
+          </button>
+          <button class="tab-btn" id="mbtn-compare" style="padding:0.55rem 1rem;font-size:0.8rem" onclick="switchMermaidDiagram('compare')">
+            2&#65039;&#8419; Traditional CI/CD vs. CodeMender Autonomous Flow (Side-by-Side)
+          </button>
+          <button class="tab-btn" id="mbtn-seq" style="padding:0.55rem 1rem;font-size:0.8rem" onclick="switchMermaidDiagram('seq')">
+            3&#65039;&#8419; Step-by-Step Keyless WIF + `cm find / verify / fix` Sequence Diagram
+          </button>
+        </div>
+
+        <!-- Mermaid Canvas Container -->
+        <div style="background:radial-gradient(circle at 50% 20%, rgba(0,168,232,0.10), rgba(2,8,20,0.96));border:1px solid rgba(56,189,248,0.32);border-radius:14px;padding:1.25rem;overflow:auto;min-height:430px;display:flex;align-items:center;justify-content:center">
+          <div id="mermaid-viewport" style="transform-origin:center top;transition:transform 0.2s ease;width:100%;display:flex;justify-content:center">
+            <div id="mermaid-render-box" style="width:100%;text-align:center"></div>
+          </div>
+        </div>
+
+        <!-- Collapsible Raw Mermaid Source (for instant import into Lucidchart -> Insert -> Mermaid) -->
+        <details style="margin-top:0.85rem;background:rgba(2,8,20,0.82);border:1px solid var(--border-subtle);border-radius:10px;padding:0.7rem 1rem">
+          <summary style="cursor:pointer;font-size:0.8rem;font-weight:600;color:var(--ktb-cyan)">
+            &#128196; View Raw Mermaid.js Definition (Paste into Lucidchart via <code>Insert &rarr; Advanced &rarr; Mermaid</code> or Markdown)
+          </summary>
+          <pre class="code-block" id="mermaid-source-code" style="margin-top:0.65rem;max-height:260px"></pre>
+        </details>
+      </div>
     </section>
 
     <!-- ======================================================================= -->
@@ -1179,7 +1226,170 @@ ${data.explanation}
       }
     }
 
+    const MERMAID_DIAGRAMS = {
+      e2e: `flowchart TB
+    subgraph DEV["1. Developer & Source Control (GitHub: mlenin/ktb-codemender-banking-demo)"]
+      A["Developer Commit / Pull Request<br/>(src/services/*.js)"] --> B["GitHub Actions Trigger<br/>(.github/workflows/codemender-pipeline.yml)"]
+    end
+
+    subgraph RUNNER["2. Ephemeral CI/CD Runner & CodeMender Autonomous Guardrail"]
+      B --> C["Mint Ephemeral GitHub OIDC JWT<br/>(iss: token.actions.githubusercontent.com)"]
+      D["① cm init<br/>Initialize CodeMender Context"] --> E["② cm find src/services<br/>Semantic Multi-File AST & Dataflow Discovery"]
+      E --> F{"③ cm verify $FID<br/>Hermetic PoC Exploit Sandbox (.exploit/)"}
+      F -->|"Unexploitable Warning"| G["Discard Noise<br/>(0% False Positives)"]
+      F -->|"PoC Exploit Succeeds (VERIFIED)"| H["④ cm fix $FID<br/>Synthesize Code Patch + Re-Run Exploit"]
+      H -->|"Exploit Blocked + Unit Tests Pass"| I["Security Gate (exit 1 on unpatched)<br/>+ Upload HTML Audit Report"]
+    end
+
+    subgraph GCP["3. Google Cloud Argolis Zero-Trust Boundary (lenin-ai-playground / 612463410164)"]
+      C <-->|"Keyless OIDC Exchange<br/>(Zero Static JSON Keys)"| J["IAM Workload Identity Pool<br/>(github-actions / github-oidc)"]
+      J --> K["Service Account Impersonation<br/>(codemender-ci@lenin-ai-playground)"]
+      K --> D
+      K <-->|"Short-Lived Access Token"| L["Google DeepMind / Vertex AI API<br/>(gemini-3.7-flash Reasoning Engine)"]
+      L <-->|"AST Analysis, PoC Script & Patch Diff"| E
+      L <--> H
+    end
+
+    subgraph OUTCOME["4. Automated Remediation & Continuous Compliance"]
+      I --> M["Open Verified Pull Request #1<br/>(Branch: codemender/auto-remediation)"]
+      M --> N["1-Click Human Review & Merge<br/>(MTTR Reduced from 21.4 Days to ~4.5 Mins)"]
+    end
+
+    style DEV fill:#071529,stroke:#38bdf8,stroke-width:1.5px,color:#f8fafc
+    style RUNNER fill:#06231e,stroke:#10b981,stroke-width:2px,color:#f8fafc
+    style GCP fill:#171133,stroke:#8b5cf6,stroke-width:2px,color:#f8fafc
+    style OUTCOME fill:#091e3a,stroke:#00a8e8,stroke-width:1.5px,color:#f8fafc
+    style F fill:#451a03,stroke:#f59e0b,stroke-width:2px,color:#fde68a
+    style H fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#a7f3d0
+    style M fill:#065f46,stroke:#34d399,stroke-width:2px,color:#ffffff`,
+
+      compare: `flowchart LR
+    subgraph LEGACY["❌ A. TRADITIONAL CI/CD PIPELINE (Legacy Static SAST — 21.4 Days MTTR)"]
+      direction LR
+      L1["1. git push<br/>(Code Change)"] --> L2["2. Unit Tests Pass<br/>(Happy Path Only)"]
+      L2 --> L3["3. Legacy Regex SAST<br/>(150+ Unverified Alerts / 74% False Positives)"]
+      L3 --> L4["4. Misses Multi-Hop & Async Bugs<br/>([].sort.constructor & TOCTOU Double-Spend)"]
+      L4 --> L5["5. Manual Jira Triage (2–3 Weeks)<br/>(Alert Fatigue & Vulnerable Prod Release)"]
+    end
+
+    subgraph MODERN["✅ B. MODERN CI/CD WITH GOOGLE DEEPMIND CODEMENDER (~4.5 Minutes MTTR)"]
+      direction LR
+      M1["1. git push + Keyless WIF<br/>(Zero Static Keys)"] --> M2["2. ★ cm find<br/>(Gemini 3.7 Semantic AST Scan)"]
+      M2 --> M3["3. ★ cm verify<br/>(Executes Real PoC Exploit in Sandbox)"]
+      M3 --> M4["4. ★ cm fix<br/>(Auto-Synthesizes Patch & Re-Runs PoC)"]
+      M4 --> M5["5. ★ Security Gate + Auto-PR #1<br/>(Blocks Vulnerable Commit & Opens Verified Fix PR)"]
+    end
+
+    style LEGACY fill:#2a0a18,stroke:#f43f5e,stroke-width:2px,color:#fda4af
+    style MODERN fill:#042f2e,stroke:#10b981,stroke-width:2.5px,color:#a7f3d0
+    style L3 fill:#4c0519,stroke:#f43f5e,color:#fecdd3
+    style L4 fill:#4c0519,stroke:#f43f5e,color:#fecdd3
+    style M2 fill:#064e3b,stroke:#10b981,color:#ecfdf5
+    style M3 fill:#064e3b,stroke:#10b981,color:#ecfdf5
+    style M4 fill:#064e3b,stroke:#10b981,color:#ecfdf5
+    style M5 fill:#0c4a6e,stroke:#38bdf8,color:#e0f2fe`,
+
+      seq: `sequenceDiagram
+    autonumber
+    actor Dev as Banking Developer
+    participant GH as GitHub Actions Runner<br/>(codemender-pipeline.yml)
+    participant WIF as GCP Workload Identity<br/>(lenin-ai-playground)
+    participant CM as CodeMender CLI + Sandbox<br/>(cm init / find / verify / fix)
+    participant VAI as Google DeepMind Vertex AI<br/>(gemini-3.7-flash)
+    participant PR as GitHub Pull Request API<br/>(PR #1 Auto-Remediation)
+
+    Dev->>GH: git push origin main (src/services/*.js)
+    GH->>WIF: Present GitHub OIDC JWT (attribute.repository == mlenin/ktb-codemender-banking-demo)
+    WIF-->>GH: Issue short-lived OAuth2 token (codemender-ci@lenin-ai-playground)
+    GH->>CM: 1. cm init (Configure project=lenin-ai-playground, region=global)
+    GH->>CM: 2. cm find src/services --model gemini-3.7-flash
+    CM->>VAI: Analyze multi-file AST, call graph & async state transitions
+    VAI-->>CM: Report candidate findings (CM-001 RCE, CM-002 CmdInj, CM-003 TOCTOU, CM-004 SSRF, CM-005 Heap)
+    loop For each candidate finding ($FID)
+        GH->>CM: 3. cm verify $FID (Synthesize & execute PoC exploit in .exploit/)
+        CM->>VAI: Generate targeted PoC exploit script
+        CM->>CM: Execute PoC against unpatched code in hermetic sandbox
+        alt PoC Exploit Breaches Target (Verdict == VERIFIED)
+            GH->>CM: 4. cm fix $FID (Synthesize minimal patch & re-run PoC)
+            CM->>VAI: Generate root-cause remediation patch
+            CM->>CM: Apply patch + Re-execute PoC (Confirm exploit is now BLOCKED)
+        else PoC Fails to Exploit
+            CM->>CM: Drop false positive (Zero alert noise)
+        end
+    end
+    CM->>GH: Export SARIF/HTML Report + Clean Working Tree (.exploit/ removed)
+    GH->>PR: Commit verified patches to codemender/auto-remediation & Open PR #1
+    GH-->>Dev: Fail CI Security Gate on unpatched branch + Link to Verified Fix PR #1`
+    };
+
+    let currentMermaidKey = 'e2e';
+    let currentMermaidZoom = 1;
+
+    async function renderMermaidDiagram(key) {
+      currentMermaidKey = key;
+      const code = MERMAID_DIAGRAMS[key] || MERMAID_DIAGRAMS.e2e;
+      const srcEl = document.getElementById('mermaid-source-code');
+      if (srcEl) srcEl.textContent = code;
+
+      ['e2e', 'compare', 'seq'].forEach(k => {
+        const btn = document.getElementById('mbtn-' + k);
+        if (btn) btn.classList.toggle('active', k === key);
+      });
+
+      const box = document.getElementById('mermaid-render-box');
+      if (!box || typeof mermaid === 'undefined') return;
+      try {
+        const id = 'mermaid-svg-' + Date.now();
+        const { svg } = await mermaid.render(id, code);
+        box.innerHTML = svg;
+        const svgEl = box.querySelector('svg');
+        if (svgEl) {
+          svgEl.style.maxWidth = '100%';
+          svgEl.style.height = 'auto';
+        }
+      } catch (err) {
+        box.innerHTML = `<pre class="code-block" style="text-align:left">${code}</pre>`;
+      }
+    }
+
+    function switchMermaidDiagram(key) {
+      currentMermaidZoom = 1;
+      const vp = document.getElementById('mermaid-viewport');
+      if (vp) vp.style.transform = 'scale(1)';
+      renderMermaidDiagram(key);
+    }
+
+    function zoomMermaid(delta) {
+      if (delta === 0) {
+        currentMermaidZoom = 1;
+      } else {
+        currentMermaidZoom = Math.min(1.8, Math.max(0.65, +(currentMermaidZoom + delta).toFixed(2)));
+      }
+      const vp = document.getElementById('mermaid-viewport');
+      if (vp) vp.style.transform = `scale(${currentMermaidZoom})`;
+    }
+
+    function copyCurrentMermaid() {
+      const code = MERMAID_DIAGRAMS[currentMermaidKey] || '';
+      navigator.clipboard.writeText(code);
+      const btn = document.getElementById('copy-mermaid-btn');
+      if (btn) {
+        const old = btn.innerHTML;
+        btn.innerHTML = '&#10004; Copied Mermaid Code!';
+        setTimeout(() => { btn.innerHTML = old; }, 2000);
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      if (typeof mermaid !== 'undefined') {
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: 'dark',
+          securityLevel: 'loose',
+          fontFamily: 'Inter, sans-serif'
+        });
+        renderMermaidDiagram('e2e');
+      }
       updateRoi();
       loadVulnerabilities();
       refreshLiveStatus();
