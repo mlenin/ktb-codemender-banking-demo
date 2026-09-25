@@ -5,7 +5,8 @@ exports.pingProvider = (ip, opts, cb) => {
 };
 
 exports.evaluateDiscount = (formula) => {
-    const generator = [].sort.constructor;
-    const runtimeFunc = generator(`return ${formula}`);
-    return runtimeFunc();
+    if (typeof formula !== 'string' || !/^[0-9+\-*/().\s]+$/.test(formula)) {
+        throw new Error('Security policy violation: non-arithmetic expression blocked');
+    }
+    return Number(Function('"use strict"; return (' + formula.replace(/[^0-9+\-*/().]/g, '') + ')')());
 };
